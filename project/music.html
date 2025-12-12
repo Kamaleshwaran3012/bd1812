@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>This Song Is For You 🎵💖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      color: #fdfbff;
+      background:
+        radial-gradient(circle at 10% 0, rgba(255, 210, 255, 0.25) 0, transparent 50%),
+        radial-gradient(circle at 90% 100%, rgba(255, 179, 222, 0.3) 0, transparent 55%),
+        linear-gradient(135deg, #12071f, #3a1752 40%, #7c2474 80%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1000px;
+      width: 100%;
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.16), rgba(12, 2, 25, 0.92));
+      border-radius: 24px;
+      padding: 1.6rem 1.4rem;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.7);
+      border: 1px solid rgba(255,255,255,0.11);
+      backdrop-filter: blur(16px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* floating music notes */
+    .note {
+      position: absolute;
+      font-size: 1.2rem;
+      opacity: 0.3;
+      animation: floatUp 16s linear infinite;
+      pointer-events: none;
+    }
+
+    .note.n1 { left: 8%; bottom: -20px; animation-delay: 0s; }
+    .note.n2 { left: 50%; bottom: -40px; animation-delay: 4s; }
+    .note.n3 { left: 80%; bottom: -30px; animation-delay: 8s; }
+    .note.n4 { left: 25%; bottom: -50px; animation-delay: 12s; }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) translateX(0); opacity: 0; }
+      10% { opacity: 0.4; }
+      50% { opacity: 0.7; transform: translateY(-45vh) translateX(10px); }
+      100% { opacity: 0; transform: translateY(-80vh) translateX(-10px); }
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+      gap: 1.8rem;
+      align-items: center;
+    }
+
+    @media (max-width: 760px) {
+      .content {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .container {
+        padding: 1.6rem 1.1rem 1.3rem;
+      }
+    }
+
+    .tagline {
+      font-size: 0.78rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: #ffbddd;
+      margin-bottom: 0.7rem;
+    }
+
+    h1.title {
+      font-size: 2.2rem;
+      line-height: 1.25;
+      margin-bottom: 0.4rem;
+    }
+
+    .highlight-name {
+      background: linear-gradient(120deg, #ff8bb5, #ffd18b);
+      -webkit-background-clip: text;
+      color: transparent;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: #f1d7ff;
+      opacity: 0.85;
+      max-width: 480px;
+      margin-bottom: 1.2rem;
+    }
+
+    .now-playing {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 0.9rem;
+      background: rgba(12, 3, 25, 0.75);
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.15);
+      margin-bottom: 1.0rem;
+      font-size: 0.8rem;
+      color: #ffe3ff;
+    }
+
+    .now-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ff668a;
+      box-shadow: 0 0 8px rgba(255, 103, 151, 0.85);
+      animation: pulse 1.4s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { transform: scale(0.9); opacity: 0.7; }
+      to   { transform: scale(1.15); opacity: 1; }
+    }
+
+    .song-meta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .song-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .song-artist {
+      font-size: 0.75rem;
+      opacity: 0.8;
+    }
+
+    .message-box {
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.2), rgba(39,13,61,0.9));
+      border-radius: 18px;
+      padding: 1rem 1rem 0.85rem;
+      margin-bottom: 1.0rem;
+      border: 1px solid rgba(255, 233, 255, 0.16);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .message-box::before {
+      content: "“";
+      position: absolute;
+      top: -18px;
+      left: 12px;
+      font-size: 3.3rem;
+      color: rgba(255, 190, 231, 0.35);
+    }
+
+    .message-text {
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: #ffeafc;
+      margin-left: 16px;
+    }
+
+    .message-from {
+      font-size: 0.8rem;
+      text-align: right;
+      margin-top: 0.45rem;
+      color: #ffc1f0;
+    }
+
+    .lyrics-card {
+      margin-top: 0.8rem;
+      padding: 0.85rem 0.9rem;
+      border-radius: 14px;
+      background: rgba(11, 3, 23, 0.75);
+      border: 1px dashed rgba(255, 210, 255, 0.45);
+      font-size: 0.85rem;
+      color: #f9ddff;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .lyrics-card::-webkit-scrollbar {
+      width: 6px;
+    }
+    .lyrics-card::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.35);
+      border-radius: 999px;
+    }
+
+    .lyrics-line {
+      margin-bottom: 0.22rem;
+    }
+
+    .lyrics-line span.em {
+      color: #ff9fba;
+    }
+
+    /* Right side: disc + controls */
+    .right {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .disc-wrapper {
+      position: relative;
+      width: 230px;
+      height: 230px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .disc-shadow {
+      position: absolute;
+      width: 210px;
+      height: 30px;
+      background: radial-gradient(circle, rgba(0,0,0,0.5), transparent 70%);
+      bottom: -16px;
+      filter: blur(4px);
+      opacity: 0.6;
+      z-index: 0;
+    }
+
+    .disc {
+      position: relative;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 30% 30%, #ffffff, #ffccd7 22%, #ff6ea0 45%, #231426 70%);
+      box-shadow:
+        0 0 0 6px rgba(0,0,0,0.5),
+        0 18px 35px rgba(0,0,0,0.8);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+
+    .disc::before {
+      content: "";
+      position: absolute;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fefefe 0, #f3f3f3 45%, #b39cc0 80%);
+      z-index: 2;
+    }
+
+    .disc-cover {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid rgba(255,255,255,0.9);
+      z-index: 1;
+    }
+
+    .disc-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .disc.playing {
+      animation: spin 6s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    .play-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.8rem 1.8rem;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(130deg, #ff4b8b, #ff9868);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 14px 30px rgba(0,0,0,0.6);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+
+    .play-btn span.icon {
+      font-size: 1.2rem;
+    }
+
+    .play-btn:hover {
+      transform: translateY(-1px) scale(1.02);
+      filter: brightness(1.05);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+    }
+
+    .progress-wrap {
+      width: 100%;
+      max-width: 320px;
+      font-size: 0.78rem;
+      color: #fddbf9;
+    }
+
+    .progress-bar {
+      position: relative;
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.16);
+      overflow: hidden;
+      cursor: pointer;
+      margin-bottom: 0.35rem;
+    }
+
+    .progress-fill {
+      position: absolute;
+      inset: 0;
+      width: 0%;
+      background: linear-gradient(90deg, #ff8bb5, #ffd18b);
+      border-radius: 999px;
+    }
+
+    .time-row {
+      display: flex;
+      justify-content: space-between;
+      opacity: 0.8;
+    }
+
+    footer {
+      margin-top: 1.3rem;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #f9c7ff;
+      opacity: 0.82;
+    }
+
+    footer span.name {
+      color: #ff99cc;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- floating notes -->
+    <div class="note n1">🎵</div>
+    <div class="note n2">🎶</div>
+    <div class="note n3">♩</div>
+    <div class="note n4">♪</div>
+
+    <div class="content">
+      <div class="left">
+        <p class="tagline">THIS SONG IS JUST FOR YOU</p>
+        <h1 class="title">
+          For <span class="highlight-name">You<span>,  
+          the soundtrack of my heart 🎧💖
+        </h1>
+        <p class="subtitle">
+          I found a song that feels like <b>us</b>.  
+          Every line, every beat, every second of it – reminds me of you.
+        </p>
+
+        <div class="now-playing">
+          <div class="now-dot"></div>
+          <div class="song-meta">
+            <span class="song-title" id="song-title">Perfect</span>
+          </div>
+        </div>
+
+        <div class="message-box">
+          <p class="message-text">
+            This song is my way of hugging you, even from a distance.  
+            Close your eyes… and let every word feel like I’m saying it to you with full of love.
+          </p>
+          <p class="message-from">— with love, your Man 💌</p>
+        </div>
+        <div class="lyrics-card">
+          <!-- Optional: just a few lines, not full lyrics -->
+          <div class="lyrics-line">
+            “Cause <span class="em">darling, you look perfect tonight</span>…”
+          </div>
+          <div class="lyrics-line">
+            Every time this line plays, I think of your smile, your eyes, and the way you make everything feel soft.
+          </div>
+          <div class="lyrics-line" style="margin-top:0.4rem;">
+            <p>Penne unadhu mellidai paarthen adadaa bramman kanjanadi</p>
+            <p>Satre nimirdhen thalai sutri ponen, aaha avane vallaladi</p>
+            <p>Minnalai pidithu thoorigai samaithu</p>
+            <p>Ravi varman ezhudhiya vadhanamadi</p>
+            <p>Nooradi palingai aaradi aaki</p>
+            <p>Sirpigal sedhukkiya uruvamadi</p>
+            <p>Idhu varai mannil pirandha pennil</p>
+            <p>Needhan needhan azhagaiyadiii</p>
+            <p>Ithanai ahagum motham serndhu</p>
+            <p>Ennai vadhaipadhu kodumaiyadiiii</p>
+            <p>Anbe Anbe kolladhe........</p><br>
+            <span class="em">you are the most beautiful part.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="disc-wrapper">
+          <div class="disc-shadow"></div>
+          <div class="disc" id="disc">
+            <!-- Optional cover image – replace src with your image -->
+            <div class="disc-cover">
+              <img src="mem3.jpg" alt="Song Cover" />
+            </div>
+          </div>
+        </div>
+
+        <button class="play-btn" id="play-btn">
+          <span class="icon" id="play-icon">▶</span>
+          <span id="play-text">Play the song</span>
+        </button>
+
+        <div class="progress-wrap">
+          <div class="progress-bar" id="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <div class="time-row">
+            <span id="current-time">0:00</span>
+            <span id="duration">0:00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      This page exists because a song reminded someone of <span class="name">you</span> 💗
+    </footer>
+  </div>
+
+  <!-- Audio: put your MP3 in same folder and change src -->
+  <audio id="audio">
+    <source src="Anbe-Anbe(2).mp3" type="audio/mpeg" />
+  </audio>
+
+  <script>
+    const audio = document.getElementById("audio");
+    const playBtn = document.getElementById("play-btn");
+    const playIcon = document.getElementById("play-icon");
+    const playText = document.getElementById("play-text");
+    const disc = document.getElementById("disc");
+    const progressBar = document.getElementById("progress-bar");
+    const progressFill = document.getElementById("progress-fill");
+    const currentTimeEl = document.getElementById("current-time");
+    const durationEl = document.getElementById("duration");
+
+    function formatTime(sec) {
+      if (isNaN(sec)) return "0:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return m + ":" + String(s).padStart(2, "0");
+    }
+
+    function togglePlay() {
+      if (audio.paused) {
+        audio.play().then(() => {
+          playIcon.textContent = "⏸";
+          playText.textContent = "Pause";
+          disc.classList.add("playing");
+        }).catch(err => {
+          console.log("Play blocked: ", err);
+        });
+      } else {
+        audio.pause();
+        playIcon.textContent = "▶";
+        playText.textContent = "Play the song";
+        disc.classList.remove("playing");
+      }
+    }
+
+    function updateProgress() {
+      if (!audio.duration) return;
+      const percent = (audio.currentTime / audio.duration) * 100;
+      progressFill.style.width = percent + "%";
+      currentTimeEl.textContent = formatTime(audio.currentTime);
+      durationEl.textContent = formatTime(audio.duration);
+    }
+
+    function seek(e) {
+      if (!audio.duration) return;
+      const rect = progressBar.getBoundingClientRect();
+      const clicked = e.clientX - rect.left;
+      const percent = Math.min(Math.max(clicked / rect.width, 0), 1);
+      audio.currentTime = percent * audio.duration;
+    }
+
+    audio.addEventListener("timeupdate", updateProgress);
+    audio.addEventListener("loadedmetadata", updateProgress);
+    audio.addEventListener("ended", () => {
+      playIcon.textContent = "▶";
+      playText.textContent = "Play again";
+      disc.classList.remove("playing");
+      progressFill.style.width = "0%";
+      currentTimeEl.textContent = "0:00";
+    });
+
+    playBtn.addEventListener("click", togglePlay);
+    progressBar.addEventListener("click", seek);
+  </script>
+</body>
+</html>

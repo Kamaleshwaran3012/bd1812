@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Our Memories 📸💖</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 0 0, rgba(255, 209, 230, 0.35) 0, transparent 50%),
+        radial-gradient(circle at 100% 100%, rgba(193, 171, 255, 0.35) 0, transparent 50%),
+        linear-gradient(145deg, #150b21, #3d174a 40%, #83244f 85%);
+      color: #fff5ff;
+    }
+
+    .wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.4rem 2.5rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .tagline {
+      font-size: 0.78rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #ffb9dd;
+      margin-bottom: 0.6rem;
+    }
+
+    h1.title {
+      font-size: 2.2rem;
+      line-height: 1.3;
+      margin-bottom: 0.5rem;
+    }
+
+    .highlight {
+      background: linear-gradient(110deg, #ff8fb8, #ffe28f);
+      -webkit-background-clip: text;
+      color: transparent;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: #ffe8ff;
+      opacity: 0.86;
+      font-size: 0.95rem;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* Floating hearts / sparkles */
+    .float-emoji {
+      position: fixed;
+      pointer-events: none;
+      font-size: 1.3rem;
+      opacity: 0.65;
+      animation: float 13s linear infinite;
+      z-index: 0;
+    }
+
+    .float-emoji.e1 { left: 5%; bottom: -40px; animation-delay: 0s; }
+    .float-emoji.e2 { left: 25%; bottom: -40px; animation-delay: 4s; }
+    .float-emoji.e3 { left: 65%; bottom: -40px; animation-delay: 8s; }
+    .float-emoji.e4 { left: 85%; bottom: -40px; animation-delay: 2s; }
+
+    @keyframes float {
+      0%   { transform: translateY(0) translateX(0); opacity: 0; }
+      10%  { opacity: 0.4; }
+      50%  { transform: translateY(-45vh) translateX(16px); opacity: 0.8; }
+      100% { transform: translateY(-85vh) translateX(-10px); opacity: 0; }
+    }
+
+    /* Album grid */
+    .album {
+      position: relative;
+      z-index: 1;
+      margin-top: 1.3rem;
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.15), rgba(8,3,18,0.95));
+      border-radius: 24px;
+      padding: 1.5rem 1.2rem 1.6rem;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.8);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(18px);
+    }
+
+    .album-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .album-title {
+      font-size: 1.1rem;
+    }
+
+    .album-count {
+      font-size: 0.8rem;
+      opacity: 0.8;
+      color: #ffd7ff;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0.75rem;
+    }
+
+    @media (min-width: 900px) {
+      .grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    .photo-card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 3 / 4;
+      background: #2d1638;
+      cursor: pointer;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.8);
+      transform: translateY(0);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.25s ease, filter 0.25s ease;
+    }
+
+    .photo-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 32px rgba(0,0,0,0.9);
+    }
+
+    .photo-card:hover img {
+      transform: scale(1.04);
+      filter: brightness(1.03);
+    }
+
+    .photo-overlay {
+      position: absolute;
+      inset: auto 0 0;
+      padding: 0.55rem 0.7rem 0.65rem;
+      background: linear-gradient(to top, rgba(0,0,0,0.75), transparent);
+      font-size: 0.78rem;
+      color: #ffe6ff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.3rem;
+    }
+
+    .photo-tag {
+      padding: 0.1rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(255, 164, 210, 0.28);
+      border: 1px solid rgba(255,255,255,0.3);
+      font-size: 0.7rem;
+      color: #ffd6f4;
+    }
+
+    /* Lightbox / preview */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(23,7,45,0.96), rgba(3,0,10,0.98));
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 1rem;
+    }
+
+    .lightbox.visible {
+      display: flex;
+    }
+
+    .lightbox-inner {
+      position: relative;
+      max-width: 960px;
+      width: 100%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .lightbox-img-wrap {
+      position: relative;
+      max-height: 80vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 18px;
+      background: #000;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.9);
+    }
+
+    .lightbox-img-wrap img {
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: 80vh;
+      object-fit: contain;
+    }
+
+    .lightbox-caption {
+      font-size: 0.85rem;
+      color: #ffe6ff;
+      opacity: 0.9;
+      text-align: center;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: none;
+      background: rgba(0,0,0,0.65);
+      color: #fff;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .close-btn:hover {
+      transform: translateY(-1px);
+      background: rgba(0,0,0,0.85);
+    }
+
+    .nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: none;
+      background: rgba(0,0,0,0.65);
+      color: #fff;
+      cursor: pointer;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-50%) scale(1.05);
+      background: rgba(0,0,0,0.85);
+    }
+
+    .nav-prev { left: 10px; }
+    .nav-next { right: 10px; }
+
+    footer {
+      margin-top: 1.2rem;
+      text-align: center;
+      font-size: 0.78rem;
+      color: #fbdcff;
+      opacity: 0.85;
+    }
+
+    footer span.name {
+      color: #ff9ac9;
+      font-weight: 600;
+    }
+
+    @media (max-width: 600px) {
+      h1.title {
+        font-size: 1.8rem;
+      }
+      .album {
+        padding: 1.3rem 1rem 1.4rem;
+      }
+      .nav-btn {
+        width: 34px;
+        height: 34px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- floating emojis -->
+  <div class="float-emoji e1">💖</div>
+  <div class="float-emoji e2">✨</div>
+  <div class="float-emoji e3">💕</div>
+  <div class="float-emoji e4">🌸</div>
+
+  <div class="wrapper">
+    <header>
+      <p class="tagline">OUR LITTLE GALLERY</p>
+      <h1 class="title">
+        Moments with <span class="highlight">You</span>  
+        that my heart never wants to forget 📷
+      </h1>
+      <p class="subtitle">
+        Every picture here is a tiny piece of our story.  
+        Scroll slowly. Smile often. These are the moments I wish I could live again and again with you.
+      </p>
+    </header>
+
+    <main class="album">
+      <div class="album-header">
+        <div class="album-title">Memory Album</div>
+        <div class="album-count" id="album-count">0 photos</div>
+      </div>
+
+      <div class="grid" id="photo-grid">
+        <!-- 🔹 Replace src, alt, data-caption with your real photos + text -->
+
+        <!-- 1 -->
+        <div class="photo-card" data-caption="Your smile on this day is still my favorite wallpaper in my mind.">
+          <img src="a1.jpg" alt="Memory 1" />
+          <div class="photo-overlay">
+            <span>A day I didn’t want to end</span>
+            <span class="photo-tag">#smile</span>
+          </div>
+        </div>
+
+        <!-- 2 -->
+        <div class="photo-card" data-caption="The way you look here… I swear the world feels softer.">
+          <img src="a2.jpg" alt="Memory 2" />
+          <div class="photo-overlay">
+            <span>You, just being effortlessly cute</span>
+            <span class="photo-tag">#candid</span>
+          </div>
+        </div>
+
+        <!-- 3 -->
+        <div class="photo-card" data-caption="That random moment that somehow became unforgettable.">
+          <img src="a3.jpg" alt="Memory 3" />
+          <div class="photo-overlay">
+            <span>Random day, special memory</span>
+            <span class="photo-tag">#vibes</span>
+          </div>
+        </div>
+
+        <!-- 4 -->
+        <div class="photo-card" data-caption="I still remember how happy we were here. Pure, simple, real.">
+          <img src="mem3.jpg" alt="Memory 4" />
+          <div class="photo-overlay">
+            <span>We looked so happy here</span>
+            <span class="photo-tag">#us</span>
+          </div>
+        </div>
+
+        <!-- 5 -->
+        <div class="photo-card" data-caption="I wish I could freeze this hug and live inside it.">
+          <img src="mem2.jpg" alt="Memory 5" />
+          <div class="photo-overlay">
+            <span>The kind of hug my soul loves</span>
+            <span class="photo-tag">#hug</span>
+          </div>
+        </div>
+
+        <!-- 6 -->
+        <div class="photo-card" data-caption="Your laugh is my favorite background music.">
+          <img src="a6.jpg" alt="Memory 6" />
+          <div class="photo-overlay">
+            <span>When you laughed like a child</span>
+            <span class="photo-tag">#laugh</span>
+          </div>
+        </div>
+
+        <!-- 7 -->
+        <div class="photo-card" data-caption="Somehow, being with you makes every place feel like home.">
+          <img src="a7.jpg" alt="Memory 7" />
+          <div class="photo-overlay">
+            <span>Anywhere with you feels right</span>
+            <span class="photo-tag">#home</span>
+          </div>
+        </div>
+
+        <!-- 8 -->
+        <div class="photo-card" data-caption="Your cute little drama that I secretly enjoy every time.">
+          <img src="a8.jpg" alt="Memory 8" />
+          <div class="photo-overlay">
+            <span>Your drama, my entertainment</span>
+            <span class="photo-tag">#dramaking/queen</span>
+          </div>
+        </div>
+
+        <!-- 9 -->
+        <div class="photo-card" data-caption="The kind of day that felt like a movie I never wanted to end.">
+          <img src="a9.jpg" alt="Memory 9" />
+          <div class="photo-overlay">
+            <span>Movie-type day with you</span>
+            <span class="photo-tag">#cinematic</span>
+          </div>
+        </div>
+
+        <!-- 10 -->
+        <div class="photo-card" data-caption="Even in a crowd, my eyes find you first.">
+          <img src="a10.jpg" alt="Memory 10" />
+          <div class="photo-overlay">
+            <span>Lost in you, not in the crowd</span>
+            <span class="photo-tag">#focus</span>
+          </div>
+        </div>
+
+        <!-- 11 -->
+        <div class="photo-card" data-caption="The way you looked at me here… I still feel it.">
+          <img src="jhjljh.jpg" alt="Memory 11" />
+          <div class="photo-overlay">
+            <span>That look… my favorite</span>
+            <span class="photo-tag">#eyes</span>
+          </div>
+        </div>
+
+        <!-- 12 -->
+        <div class="photo-card" data-caption="We didn’t pose much, but this picture still says everything.">
+          <img src="a12.jpg" alt="Memory 12" />
+          <div class="photo-overlay">
+            <span>Not perfect, but so us</span>
+            <span class="photo-tag">#real</span>
+          </div>
+        </div>
+
+        <!-- 13 -->
+        <div class="photo-card" data-caption="I look happy… because you were next to me.">
+          <img src="a13.jpg" alt="Memory 13" />
+          <div class="photo-overlay">
+            <span>My face when you’re near</span>
+            <span class="photo-tag">#glow</span>
+          </div>
+        </div>
+
+        <!-- 14 -->
+        <div class="photo-card" data-caption="The world went silent for a second here. It was just you and me.">
+          <img src="a14.jpg" alt="Memory 14" />
+          <div class="photo-overlay">
+            <span>Time stopped for a bit</span>
+            <span class="photo-tag">#freeze</span>
+          </div>
+        </div>
+
+        <!-- 15 -->
+        <div class="photo-card" data-caption="I still remember the conversation we had this day. It meant a lot.">
+          <img src="a15.jpg" alt="Memory 15" />
+          <div class="photo-overlay">
+            <span>That deep talk day</span>
+            <span class="photo-tag">#conversation</span>
+          </div>
+        </div>
+
+        <!-- 16 -->
+        <div class="photo-card" data-caption="You were shy here. I was just busy falling for you more.">
+          <img src="a17.jpg" alt="Memory 16" />
+          <div class="photo-overlay">
+            <span>Shy, and still so pretty</span>
+            <span class="photo-tag">#blush</span>
+          </div>
+        </div>
+
+        <!-- 17 -->
+        <div class="photo-card" data-caption="We looked like chaos, but it felt like peace.">
+          <img src="mem4.jpg" alt="Memory 17" />
+          <div class="photo-overlay">
+            <span>Mad beautiful</span>
+            <span class="photo-tag">#madness</span>
+          </div>
+        </div>
+
+        <!-- 18 -->
+        <div class="photo-card" data-caption="I wish I could pause life exactly like this and stay forever.">
+          <img src="WhatsApp Image 2024-10-09 at 09.25.52_a421a1fc.jpg" alt="Memory 18" />
+          <div class="photo-overlay">
+            <span>If only time could pause</span>
+            <span class="photo-tag">#freezeit</span>
+          </div>
+        </div>
+
+        <!-- 19 -->
+        <div class="photo-card" data-caption="You didn’t know I clicked this… but I’m glad I did.">
+          <img src="mem1.jpg" alt="Memory 19" />
+          <div class="photo-overlay">
+            <span>My secret favorite click</span>
+            <span class="photo-tag">#sneakshot</span>
+          </div>
+        </div>
+
+        <!-- 20 -->
+        <div class="photo-card" data-caption="One of those days that proved — I really want my future with you.">
+          <img src="a20.jpg" alt="Memory 20" />
+          <div class="photo-overlay">
+            <span>Future-flash moment</span>
+            <span class="photo-tag">#forever</span>
+          </div>
+        </div>
+
+        <!-- You can add more up to 30+ in same pattern -->
+      </div>
+
+      <footer>
+        This gallery was made with a lot of love by <span class="name">[YOUR NAME]</span>  
+        for the one person who makes every picture look better just by being in it 💞
+      </footer>
+    </main>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-inner">
+      <button class="close-btn" id="close-lightbox">✕</button>
+      <button class="nav-btn nav-prev" id="prev-photo">❮</button>
+      <button class="nav-btn nav-next" id="next-photo">❯</button>
+
+      <div class="lightbox-img-wrap">
+        <img id="lightbox-img" src="" alt="Preview" />
+      </div>
+      <p class="lightbox-caption" id="lightbox-caption"></p>
+    </div>
+  </div>
+
+  <script>
+    const cards = Array.from(document.querySelectorAll(".photo-card"));
+    const albumCountEl = document.getElementById("album-count");
+
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightbox-img");
+    const lightboxCaption = document.getElementById("lightbox-caption");
+    const closeBtn = document.getElementById("close-lightbox");
+    const prevBtn = document.getElementById("prev-photo");
+    const nextBtn = document.getElementById("next-photo");
+
+    let currentIndex = 0;
+
+    function openLightbox(index) {
+      currentIndex = index;
+      const card = cards[currentIndex];
+      const img = card.querySelector("img");
+      const caption = card.getAttribute("data-caption") || img.alt || "";
+
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
+      lightboxCaption.textContent = caption;
+      lightbox.classList.add("visible");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove("visible");
+      document.body.style.overflow = "";
+    }
+
+    function showNext(delta) {
+      if (!cards.length) return;
+      currentIndex = (currentIndex + delta + cards.length) % cards.length;
+      openLightbox(currentIndex);
+    }
+
+    cards.forEach((card, idx) => {
+      card.addEventListener("click", () => openLightbox(idx));
+    });
+
+    closeBtn.addEventListener("click", closeLightbox);
+    prevBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      showNext(-1);
+    });
+    nextBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      showNext(1);
+    });
+
+    lightbox.addEventListener("click", (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (!lightbox.classList.contains("visible")) return;
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowRight") showNext(1);
+      if (e.key === "ArrowLeft") showNext(-1);
+    });
+
+    // set photo count
+    albumCountEl.textContent = cards.length + " photos";
+  </script>
+</body>
+</html>
